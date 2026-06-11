@@ -27,7 +27,7 @@ Ok lets get into the features:
 - Also added a pomodoro timer, and a music player for times you get sad. It plays Believer so that you uh who's the maker anyway, i will thank you in the acknowledgement section so don't worry
 - Make sure to keep your volume to 100% because of a reason (you will find out when you use it)
 - And thats all I think, and oh completely forgot, you can also **add goals, interests, etc. in your profile** and it will use that to further **obliterate you** lol. 😂
-- Sometimes the hack club ai server does not do its job, so thats not on me... it is on the server... :(
+- Sometimes the hack club ai server does not do its job, so thats not on me... it is on the server... ☹️
 
 ## Demo
 Now here's a **demo** so that you can think about jumping into this ocean or not:

@@ -53,3 +53,5 @@ python3 main.py
 
 ## Acknowledgements
 A massive thank you to **Hack Club** for providing the proxy AI server that powers CritiqueOS. Without their infrastructure, getting roasted by 5 different AI personalities simultaneously wouldn't be possible!
+
+Also, a big shoutout to **Imagine Dragons** for the song "Believer" which serves as the much-needed emotional support background track when you get sad!

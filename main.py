@@ -79,7 +79,20 @@ openmeteo = openmeteo_requests.Client(session = retry_session)
 
 
 client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
-# Get the users location and current time
+
+def send_chat_with_retry(messages, model="google/gemini-2.5-flash", retries=3):
+    for attempt in range(retries):
+        try:
+            return client.chat.send(
+                model=model,
+                messages=messages,
+                stream=False
+            )
+        except Exception as e:
+            if attempt == retries - 1:
+                raise e
+            time.sleep(2)
+
 def get_location():
     try:
         response = requests.get("http://ip-api.com/json").json()
@@ -165,13 +178,11 @@ def get_haiku(country, city, current_status, current_temp, current_humidity, hea
     [Line 1: 5 syllables]
     [Line 2: 7 syllables]
     [Line 3: 5 syllables]"""
-    response = client.chat.send(
-        model="google/gemini-2.5-flash",
+    response = send_chat_with_retry(
         messages=[
             {"role": "system", "content": f"{SYSTEM_PROMPT}"},
             {"role": "user", "content": f"Country: {country}, City: {city}, Temperature: {current_temp}, Humidity: {current_humidity}, Condition: {current_status}, Local News: {headlines}"}
-        ],
-        stream=False
+        ]
     )
     message = response.choices[0].message.content
     return message
@@ -840,13 +851,11 @@ class CritiqueApp(App):
                 self.call_from_thread(self._log_agent_header, agent_name)
 
                 try:
-                    response = client.chat.send(
-                        model="google/gemini-2.5-flash",
+                    response = send_chat_with_retry(
                         messages=[
                             {"role": "system", "content": prompt},
                             {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"},
-                        ],
-                        stream=False,
+                        ]
                     )
                     message = response.choices[0].message.content
 
@@ -890,13 +899,11 @@ class CritiqueApp(App):
             self.call_from_thread(self._log_agent_header, "⚡ THE DICTATOR'S VERDICT")
 
             try:
-                task_response = client.chat.send(
-                    model="google/gemini-2.5-flash",
+                task_response = send_chat_with_retry(
                     messages=[
                         {"role": "system", "content": TASK_PROMPT},
                         {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"},
-                    ],
-                    stream=False,
+                    ]
                 )
                 task = task_response.choices[0].message.content
 

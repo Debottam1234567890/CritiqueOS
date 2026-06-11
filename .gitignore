@@ -2,3 +2,4 @@ api.txt
 __pycache__/
 *.pyc
 user_data.json
+.cache.sqlite

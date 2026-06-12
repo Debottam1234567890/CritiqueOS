@@ -59,17 +59,23 @@ AGENT_NAMES = [
 clear_comand = "cls" if platform.system() == "Windows" else "clear"
 
 # Initialize OPEROUTER client
-if os.environ.get("OPENROUTER_API_KEY") is None:
-    # try reading from api.txt as a fallback
-    if os.path.exists("api.txt"):
-        with open("api.txt", "r") as f:
-            api_key = f.read().strip()
-        os.environ["OPENROUTER_API_KEY"] = api_key
-    else:
-        print("Pls init OPENROUTER_API_KEY")
-        exit()
-else:
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+api_key = os.environ.get("OPENROUTER_API_KEY")
+
+if not api_key:
+    if os.path.exists(".env"):
+        with open(".env", "r") as f:
+            for line in f:
+                if line.startswith("OPENROUTER_API_KEY="):
+                    api_key = line.strip().split("=", 1)[1]
+                    os.environ["OPENROUTER_API_KEY"] = api_key
+                    break
+
+if not api_key:
+    print("Welcome to CritiqueOS! 🍅")
+    api_key = input("Please enter your OpenRouter API Key: ").strip()
+    with open(".env", "a") as f:
+        f.write(f"OPENROUTER_API_KEY={api_key}\n")
+    os.environ["OPENROUTER_API_KEY"] = api_key
 
 # Initialize METEO client
 cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)

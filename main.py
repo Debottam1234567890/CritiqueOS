@@ -14,11 +14,23 @@ from openrouter import OpenRouter # Like why do i make that stupid capital "R" e
 from datetime import datetime
 import platform
 
+import sys
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 try:
     pygame.mixer.init()
     typewriter_sound = None
-    if os.path.exists("typewriter.mp3"):
-        typewriter_sound = pygame.mixer.Sound("typewriter.mp3")
+    tp_path = resource_path("typewriter.mp3")
+    if os.path.exists(tp_path):
+        typewriter_sound = pygame.mixer.Sound(tp_path)
 except Exception:
     pass
 
@@ -1012,10 +1024,11 @@ class CritiqueApp(App):
 
         # ── music buttons ──
         elif btn_id == "music-play":
-            if os.path.exists("music.mp3"):
+            music_path = resource_path("music.mp3")
+            if os.path.exists(music_path):
                 try:
                     if not pygame.mixer.music.get_busy():
-                        pygame.mixer.music.load("music.mp3")
+                        pygame.mixer.music.load(music_path)
                         pygame.mixer.music.play(-1)
                     else:
                         pygame.mixer.music.unpause()
@@ -1034,8 +1047,9 @@ class CritiqueApp(App):
 
         elif btn_id == "music-reset":
             try:
-                if os.path.exists("music.mp3"):
-                    pygame.mixer.music.load("music.mp3")
+                music_path = resource_path("music.mp3")
+                if os.path.exists(music_path):
+                    pygame.mixer.music.load(music_path)
                     pygame.mixer.music.play(-1)
                     self.notify("■ Music reset and playing", severity="information")
             except Exception:

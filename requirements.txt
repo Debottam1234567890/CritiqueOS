@@ -4,7 +4,6 @@ openmeteo-requests
 requests-cache
 retry-requests
 openrouter
-pandas
 gnews
 textual
 rich

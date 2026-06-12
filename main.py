@@ -11,7 +11,6 @@ import requests_cache
 # pyrefly: ignore [missing-import]
 from retry_requests import retry # I dont know why i imported this
 from openrouter import OpenRouter # Like why do i make that stupid capital "R" every time?!?
-import pandas as pd
 from datetime import datetime
 import platform
 

@@ -34,15 +34,12 @@ Now here's a **demo** so that you can think about jumping into this ocean or not
 ![Demo Screenshot](./assets/image.png)
 
 ## Installation
-To run CritiqueOS on your own machine, you'll need to clone the repository, install the dependencies, and set up your API key:
+To run CritiqueOS on your own machine, you'll need to clone the repository, install the dependencies, and run the app. It will automatically and securely ask for your OpenRouter API key on the first run!
 
 ```bash
 # Clone the repository
-git clone https://github.com/Debottam1234567890/Developer_Sandbox.git
-cd Developer_Sandbox
-
-# Set up your OpenRouter API Key
-export OPENROUTER_API_KEY="your-api-key-here"
+git clone https://github.com/Debottam1234567890/CritiqueOS.git
+cd CritiqueOS
 
 # Install all the required dependencies
 pip install -r requirements.txt

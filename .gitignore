@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 user_data.json
 .cache.sqlite
+build/
+dist/
+*.spec
+venv/

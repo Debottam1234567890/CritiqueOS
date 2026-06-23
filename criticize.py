@@ -141,28 +141,48 @@ while True:
     elif user_input.startswith("criticize"):
         messages = []
         for prompt in PROMPTS:
-            response = client.chat.send(
-                model="google/gemini-2.5-flash",
-                messages=[
-                    {"role": "system", "content": prompt},
-                    {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"}
-                ],
-                stream=False
-            )
+            try:
+                response = client.chat.send(
+                    model="google/gemma-4-31b-it:free",
+                    messages=[
+                        {"role": "system", "content": prompt},
+                        {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"}
+                    ],
+                    stream=False
+                )
+            except Exception:
+                response = client.chat.send(
+                    model="openrouter/free",
+                    messages=[
+                        {"role": "system", "content": prompt},
+                        {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"}
+                    ],
+                    stream=False
+                )
             message = response.choices[0].message.content
             messages.append(message)
             for char in message:
                 print(char, end="", flush=True)
                 time.sleep(0.01)
             print("\n\n")
-        task_response = client.chat.send(
-            model="google/gemini-2.5-flash",
-            messages=[
-                {"role": "system", "content": TASK_PROMPT},
-                {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"}
-            ],
-            stream=False
-        )
+        try:
+            task_response = client.chat.send(
+                model="google/gemma-4-31b-it:free",
+                messages=[
+                    {"role": "system", "content": TASK_PROMPT},
+                    {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"}
+                ],
+                stream=False
+            )
+        except Exception:
+            task_response = client.chat.send(
+                model="openrouter/free",
+                messages=[
+                    {"role": "system", "content": TASK_PROMPT},
+                    {"role": "user", "content": f"Here is my data: {json.dumps(user_data, indent=4)}"}
+                ],
+                stream=False
+            )
         task = task_response.choices[0].message.content
         for char in task:
             print(char, end="", flush=True)

@@ -97,7 +97,7 @@ openmeteo = openmeteo_requests.Client(session = retry_session)
 
 client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
 
-def send_chat_with_retry(messages, model="google/gemini-2.5-flash", retries=3):
+def send_chat_with_retry(messages, model="google/gemma-4-31b-it:free", retries=3):
     for attempt in range(retries):
         try:
             return client.chat.send(
@@ -107,7 +107,14 @@ def send_chat_with_retry(messages, model="google/gemini-2.5-flash", retries=3):
             )
         except Exception as e:
             if attempt == retries - 1:
-                raise e
+                try:
+                    return client.chat.send(
+                        model="openrouter/free",
+                        messages=messages,
+                        stream=False
+                    )
+                except Exception:
+                    raise e
             time.sleep(2)
 
 def get_location():

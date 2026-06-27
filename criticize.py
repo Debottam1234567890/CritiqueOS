@@ -10,7 +10,10 @@ if not api_key:
     exit()
 
 # Init client
-client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
+if api_key and api_key.startswith("sk-hc"):
+    client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
+else:
+    client = OpenRouter(api_key=api_key)
 
 if not os.path.exists("user_data.json"):
     name = input("What's your name, doofus? ").strip()

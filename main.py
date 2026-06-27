@@ -84,7 +84,7 @@ if not api_key:
 
 if not api_key:
     print("Welcome to CritiqueOS! 🍅")
-    api_key = input("Please enter your OpenRouter API Key: ").strip()
+    api_key = input("Please enter your OpenRouter (or Hack Club) API Key: ").strip()
     with open(".env", "a") as f:
         f.write(f"OPENROUTER_API_KEY={api_key}\n")
     os.environ["OPENROUTER_API_KEY"] = api_key
@@ -94,8 +94,10 @@ cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
 retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
 openmeteo = openmeteo_requests.Client(session = retry_session)
 
-
-client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
+if api_key and api_key.startswith("sk-hc"):
+    client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
+else:
+    client = OpenRouter(api_key=api_key)
 
 def send_chat_with_retry(messages, model="google/gemma-4-31b-it:free", retries=3):
     for attempt in range(retries):

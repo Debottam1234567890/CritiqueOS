@@ -100,6 +100,12 @@ else:
     client = OpenRouter(api_key=api_key)
 
 def send_chat_with_retry(messages, model="google/gemma-4-31b-it:free", retries=3):
+    import asyncio
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+
     for attempt in range(retries):
         try:
             return client.chat.send(
@@ -117,6 +123,7 @@ def send_chat_with_retry(messages, model="google/gemma-4-31b-it:free", retries=3
                     )
                 except Exception:
                     raise e
+            import time
             time.sleep(2)
 
 def get_location():

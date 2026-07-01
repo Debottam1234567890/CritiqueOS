@@ -9,7 +9,7 @@ if not api_key:
     print("Pls init OPENROUTER_API_KEY")
     exit()
 
-# Init client
+# Init client.
 if api_key and api_key.startswith("sk-hc"):
     client = OpenRouter(api_key=api_key, server_url="https://ai.hackclub.com/proxy/v1")
 else:

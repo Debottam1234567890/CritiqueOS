@@ -31,6 +31,8 @@ Ok lets get into the features:
 
 ## Demo
 Now here's a **demo** so that you can think about jumping into this ocean or not:
+[Watch the Demo Video](./assets/demo.mov)
+
 ![Demo Screenshot](./assets/image.png)
 
 ## Installation

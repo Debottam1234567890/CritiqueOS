@@ -1,0 +1,88 @@
+name: Build CritiqueOS Executables
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers when you push a tag like v1.1, v2.0, etc.
+  workflow_dispatch:  # Also allows manual trigger from GitHub Actions tab
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: CritiqueOS.exe
+            zip_name: CritiqueOS-Windows.zip
+            separator: ";"
+          - os: macos-latest
+            artifact_name: CritiqueOS
+            zip_name: CritiqueOS-macOS.zip
+            separator: ":"
+          - os: ubuntu-latest
+            artifact_name: CritiqueOS
+            zip_name: CritiqueOS-Linux.zip
+            separator: ":"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build executable
+        run: |
+          pyinstaller --onefile --name ${{ matrix.artifact_name }} --add-data "music.mp3${{ matrix.separator }}." --add-data "typewriter.mp3${{ matrix.separator }}." --console main.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.zip_name }}
+          path: dist/${{ matrix.artifact_name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create zips
+        run: |
+          cd CritiqueOS-Windows.zip && zip -r ../CritiqueOS-Windows.zip . && cd ..
+          cd CritiqueOS-macOS.zip && zip -r ../CritiqueOS-macOS.zip . && cd ..
+          cd CritiqueOS-Linux.zip && zip -r ../CritiqueOS-Linux.zip . && cd ..
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            CritiqueOS-Windows.zip
+            CritiqueOS-macOS.zip
+            CritiqueOS-Linux.zip
+          body: |
+            ## CritiqueOS Release
+
+            Download the zip for your OS, extract it, and run the executable directly.
+            **No Python installation needed!**
+
+            - 🪟 **Windows**: Download `CritiqueOS-Windows.zip`, extract, run `CritiqueOS.exe`
+            - 🍎 **macOS**: Download `CritiqueOS-macOS.zip`, extract, run `./CritiqueOS`
+            - 🐧 **Linux**: Download `CritiqueOS-Linux.zip`, extract, run `./CritiqueOS`
+
+            You'll be prompted for your Hack Club API key on first run.
